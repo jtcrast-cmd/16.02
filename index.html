@@ -5,164 +5,138 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nossa História</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&family=Playfair+Display:wght@300;400;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
   <style>
-    /* --- ANIMAÇÃO DO FUNDO: VAGALUMES MÁGICOS --- */
+    :root {
+      --accent-color: #ffffff;
+      --bg-dark: #080808;
+      --glass-bg: rgba(255, 255, 255, 0.04);
+      --glass-border: rgba(255, 255, 255, 0.1);
+    }
+
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: #050505;
+      background-color: var(--bg-dark);
       color: #e0e0e0;
       scroll-behavior: smooth;
-      position: relative;
-      min-height: 100vh;
       overflow-x: hidden;
+      min-height: 100vh;
     }
 
-    body::before {
+    /* Fundo sutil com gradiente */
+    body::after {
       content: "";
       position: fixed;
       inset: 0;
-      background-image: url('image_2.png'), url('image_1.png');
-      background-position: center, top;
-      background-repeat: no-repeat, repeat;
-      background-size: cover, auto;
-      opacity: 0.1;
-      pointer-events: none;
-      z-index: -2;
-      animation: drift 60s linear infinite;
-    }
-
-    @keyframes drift {
-      from { background-position: center 0, top 0; }
-      to { background-position: center 1000px, top -500px; }
+      background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
+      z-index: -3;
     }
 
     /* --- TELA DE ABERTURA --- */
     #startScreen {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #050505;
+      inset: 0;
+      background-color: var(--bg-dark);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       z-index: 10000;
-      transition: opacity 1.5s ease;
+      transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
       text-align: center;
-      padding: 20px;
+      padding: 30px;
     }
 
     #startScreen h2 {
       font-family: 'Playfair Display', serif;
-      font-weight: 300;
-      color: #fff;
-      font-size: 1.8rem;
-      margin-bottom: 15px;
-      text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+      font-weight: 400;
+      font-size: 2rem;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
     }
 
     .mensagem-engracada {
-      font-family: 'Inter', sans-serif;
-      color: #bbb;
+      color: #888;
       font-size: 0.85rem;
       font-style: italic;
-      max-width: 80%;
-      line-height: 1.5;
-      margin-bottom: 25px;
-    }
-
-    #startScreen p {
-      font-family: 'Inter', sans-serif;
-      color: #aaa;
-      font-size: 0.9rem;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
+      max-width: 300px;
     }
 
     .btn-abrir {
-      padding: 12px 40px;
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      border-radius: 30px;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(5px);
+      padding: 15px 50px;
+      border: 1px solid var(--glass-border);
+      border-radius: 40px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
       color: #fff;
       font-family: 'Playfair Display', serif;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       cursor: pointer;
       transition: all 0.4s ease;
-      animation: pulse 2.5s infinite ease-in-out;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
 
     .btn-abrir:hover {
       background: #fff;
       color: #000;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+      transform: scale(1.05);
     }
 
-    /* --- TELA DE INTRODUÇÃO --- */
+    /* --- INTRO SCREEN --- */
     #introScreen {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       display: none;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
       z-index: 9000;
       opacity: 0;
       transition: opacity 2s ease;
-      padding: 20px;
-      box-sizing: border-box;
+      padding: 40px;
+      text-align: center;
     }
 
     #introScreen h1 {
       font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
-      text-align: center;
+      font-size: 2.2rem;
       font-weight: 300;
-      line-height: 1.5;
-      color: #ffffff;
-      letter-spacing: 0.5px;
-      text-shadow: 0 0 25px rgba(255, 255, 255, 0.5);
+      line-height: 1.4;
+      max-width: 800px;
     }
 
-    /* --- CONTEÚDO PRINCIPAL (Linha do tempo) --- */
+    /* --- CONTEÚDO PRINCIPAL --- */
     #mainContent {
       display: none;
       opacity: 0;
       transition: opacity 2s ease;
-      padding-top: 60px;
+      padding: 80px 20px;
     }
 
     .timeline {
       position: relative;
-      max-width: 600px;
+      max-width: 700px;
       margin: auto;
-      padding: 0 20px 40px 20px;
     }
 
     .timeline::before {
       content: '';
       position: absolute;
-      left: 20px;
-      top: 5px;
+      left: 10px;
+      top: 0;
       bottom: 0;
-      width: 2px;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,0.1));
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.3) 10%, rgba(255,255,255,0.3) 90%, transparent);
     }
 
     .event {
       position: relative;
-      margin-bottom: 50px;
-      padding-left: 50px;
+      margin-bottom: 80px;
+      padding-left: 45px;
       opacity: 0;
-      transform: translateY(40px);
+      transform: translateY(30px);
       transition: all 1s ease;
     }
 
@@ -171,169 +145,123 @@
       transform: translateY(0);
     }
 
-    @keyframes heartbeat {
-      0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
-      70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
-    }
-
     .event::before {
       content: '';
       position: absolute;
-      left: 13px;
-      top: 10px;
-      width: 16px;
-      height: 16px;
-      background: #ffffff;
+      left: 6px;
+      top: 8px;
+      width: 9px;
+      height: 9px;
+      background: #fff;
       border-radius: 50%;
-      box-shadow: 0 0 10px rgba(255,255,255,0.5);
-      animation: heartbeat 2s infinite;
+      box-shadow: 0 0 15px #fff;
+      z-index: 2;
     }
 
     .card {
-      background: linear-gradient(145deg, rgba(26,26,26,0.95), rgba(15,15,15,0.95));
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-left: 3px solid rgba(255, 255, 255, 0.4);
-      padding: 30px;
-      border-radius: 14px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      padding: 35px;
+      border-radius: 20px;
       line-height: 1.8;
-      white-space: pre-line;
-      font-family: 'Open Sans', sans-serif;
-      font-size: 1rem;
-      color: #e8e8e8;
-      transition: all 0.4s ease;
+      font-size: 1.05rem;
+      color: #ccc;
+      transition: transform 0.4s ease, border 0.4s ease;
     }
 
-    /* O hover atualizado, seguro e apenas visual */
     .card:hover {
-      transform: translateY(-5px) scale(1.02);
-      border-color: rgba(255, 255, 255, 0.4);
-      border-left: 4px solid #ffffff;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.3);
+      transform: translateX(5px);
     }
 
     .date {
+      display: block;
       font-family: 'Playfair Display', serif;
-      font-size: 15px;
-      margin-bottom: 25px;
-      color: #ffffff;
-      opacity: 0.9;
+      font-style: italic;
+      color: #fff;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
       letter-spacing: 1px;
-      display: inline-block;
-      border-bottom: 1px solid rgba(255,255,255,0.2);
-      padding-bottom: 5px;
+      opacity: 0.7;
     }
 
+    /* --- BOTÃO FINAL --- */
     .suspense-container {
       text-align: center;
-      margin: 40px 20px 100px 20px;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: all 1s ease;
-    }
-
-    .suspense-container.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 0.7; }
-      50% { transform: scale(1.05); opacity: 1; text-shadow: 0 0 15px rgba(255,255,255,0.6); }
-      100% { transform: scale(1); opacity: 0.7; }
+      padding: 60px 0 120px;
     }
 
     .btn-suspense {
       background: none;
-      border: none;
-      color: #ffffff;
+      border: 1px dashed rgba(255,255,255,0.3);
+      color: #fff;
+      padding: 15px 30px;
+      border-radius: 10px;
       font-family: 'Playfair Display', serif;
       font-size: 1.2rem;
-      font-style: italic;
       cursor: pointer;
-      padding: 10px 20px;
-      animation: pulse 2.5s infinite ease-in-out;
+      transition: all 0.5s;
     }
 
-    .btn-suspense:focus { outline: none; }
+    .btn-suspense:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: #fff;
+      letter-spacing: 2px;
+    }
 
-    /* --- TELA FINAL (Apenas a mensagem) --- */
+    /* --- TELA FINAL --- */
     #finalScreen {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       display: none;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      z-index: 9000;
+      z-index: 10000;
       opacity: 0;
-      transition: opacity 2s ease;
-      padding: 30px;
-      box-sizing: border-box;
+      transition: opacity 2.5s ease;
+      background: var(--bg-dark);
       text-align: center;
+      padding: 40px;
     }
 
     .very-final-text {
       font-family: 'Playfair Display', serif;
-      font-size: 2.2rem;
-      font-weight: 300;
-      color: #fff;
+      font-size: 2rem;
       line-height: 1.6;
-      text-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
+      max-width: 600px;
+      color: #fff;
+      text-shadow: 0 0 20px rgba(255,255,255,0.4);
     }
 
-    /* Vagalumes/Luzes Mágicas */
+    /* VAGALUMES */
     #particle-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: 998;
-        display: none;
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
     }
 
     .particle {
-        position: absolute;
-        bottom: -20px;
-        background: rgba(255, 255, 255, 0.9);
-        box-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.4);
-        border-radius: 50%;
-        opacity: 0;
-        animation: floatUp ease-in infinite;
+      position: absolute;
+      background: #fff;
+      border-radius: 50%;
+      filter: blur(1px);
+      opacity: 0;
+      animation: floatUp ease-in-out infinite;
     }
 
     @keyframes floatUp {
-        0% { transform: translateY(0) scale(1); opacity: 0; }
-        15% { opacity: 1; }
-        80% { opacity: 0.8; }
-        100% { transform: translateY(-120vh) scale(0.2); opacity: 0; }
+      0% { transform: translateY(0) scale(0); opacity: 0; }
+      20% { opacity: 0.6; }
+      80% { opacity: 0.6; }
+      100% { transform: translateY(-100vh) scale(1); opacity: 0; }
     }
 
-    /* --- AJUSTES PARA CELULAR (Responsividade adicionada aqui) --- */
-    @media (max-width: 768px) {
-      .card {
-        padding: 20px;
-        font-size: 0.95rem;
-      }
-      .event {
-        padding-left: 35px; 
-      }
-      .event::before {
-        left: 5px; 
-      }
-      .timeline::before {
-        left: 12px; 
-      }
-      .very-final-text {
-        font-size: 1.5rem;
-      }
+    @media (max-width: 600px) {
+      .card { padding: 25px; font-size: 0.95rem; }
+      #introScreen h1, .very-final-text { font-size: 1.5rem; }
     }
   </style>
 </head>
@@ -345,128 +273,63 @@
   </audio>
 
   <div id="startScreen">
-    <h2>Tenho uma surpresa para você...</h2>
+    <h2>Para o Lucas.</h2>
     <div class="mensagem-engracada">
-      (Espero que goste, porque não sei usar essa linguagem de programação, foi difícil kkkkkk)
+      (Eu não sabia nada de código, mas por você eu aprendo qualquer língua. ❤️)
     </div>
-    <p>Recomendo que use fones de ouvido 🎧</p>
-    <button class="btn-abrir" onclick="iniciarSurpresa()">Abrir</button>
+    <button class="btn-abrir" onclick="iniciarSurpresa()">Entrar no nosso mundo</button>
   </div>
 
   <div id="introScreen">
-    <h1>Algumas coisas foram escritas antes de serem ditas.</h1>
+    <h1>"Algumas coisas foram escritas antes de serem ditas."</h1>
   </div>
 
   <div id="mainContent">
-   
     <div class="timeline">
 
       <div class="event">
         <div class="card">
-          <div class="date">16 de fevereiro de 2026, onde tudo começou</div>
-          Lucas,
-         
-          Por muito tempo eu duvidei se poderia amar e ser amado de uma forma pura.
-          Com respeito, cuidado e uma troca de afeto intensa e verdadeira.
-
-          Você sabe que eu sou chorão… então estou chorando enquanto escrevo isso.
-          Eu criei medo do amor, porque amar é ser vulnerável.
-          É entregar o coração sem garantias.
-          Mas você me fez enxergar que o amor vai além do medo
-          é sobre confiança.
-
-          Você é a pessoa por quem eu orei.
-          Eu já sabia de você antes mesmo de te conhecer.
-
-          Você enxergou beleza em mim.
-          E eu enxerguei um infinito em você.
-
-          Foi ali que eu tive certeza:
-          era você que eu queria.
+          <span class="date">16 de fevereiro de 2026</span>
+          Lucas,<br><br>
+          Por muito tempo eu duvidei se poderia amar e ser amado de uma forma pura. Com respeito, cuidado e uma troca de afeto intensa e verdadeira.<br><br>
+          Você sabe que eu sou chorão… então estou chorando enquanto escrevo isso. Eu criei medo do amor, porque amar é ser vulnerável. É entregar o coração sem garantias.<br><br>
+          Mas você me fez enxergar que o amor vai além do medo, é sobre confiança.
         </div>
       </div>
 
       <div class="event">
         <div class="card">
-          <div class="date">17 de fevereiro de 2026, nosso primeiro toque</div>
-         
-          Hoje eu senti minha alma aflorar,
-          como se algo adormecido despertasse em silêncio.
-
-          Entre toque, desejo e carinho,
-          eu entendi que o corpo pode falar
-          o idioma que a alma entende.
-
-          Quando parecia fim,
-          era começo.
-
-          Porque o que nasce quando dois corações
-          se encontram sem defesa
-          não cabe na pressa do mundo.
+          <span class="date">17 de fevereiro de 2026</span>
+          Hoje eu senti minha alma aflorar, como se algo adormecido despertasse em silêncio.<br><br>
+          Entre toque, desejo e carinho, eu entendi que o corpo pode falar o idioma que a alma entende.<br><br>
+          Quando parecia fim, era começo. Porque o que nasce quando dois corações se encontram sem defesa não cabe na pressa do mundo.
         </div>
       </div>
 
       <div class="event">
         <div class="card">
-          <div class="date">21 de fevereiro de 2026, a sorte que tenho</div>
-          Eu não sei descrever
-          todo esse carinho que tenho por você.
-          Eu amo quando você me olha.
-          Amo quando me abraça.
-          Amo quando suas atitudes dizem:
-          “Eu quero você por perto.”
-
-          Eu respeito seu ritmo.
-          Respeito o que estamos construindo.
-          Porque o que é verdadeiro
-          não precisa correr.
-
-          Mas por dentro,
-          eu só penso:
-          Como é bom ter você comigo.
+          <span class="date">21 de fevereiro de 2026</span>
+          Eu amo quando você me olha. Amo quando me abraça. Amo quando suas atitudes dizem: “Eu quero você por perto.”<br><br>
+          Eu respeito seu ritmo. Respeito o que estamos construindo. Porque o que é verdadeiro não precisa correr.<br><br>
+          Mas por dentro, eu só penso: Como é bom ter você comigo.
         </div>
       </div>
 
       <div class="event">
         <div class="card">
-          <div class="date">25 de fevereiro de 2026, um romance infinito</div>
-          Hoje eu começo a construir esse site.
-          E, de alguma forma, também começo a construir um pedaço do nosso futuro nele.
-
-          Estou montando tudo em silêncio,
-          imaginando o seu sorriso
-          quando perceber cada detalhe.
-
-          Garoto, eu quero muito que você sinta
-          todo o amor que estou colocando em cada palavra.
-          E mesmo que a gente se conheça há poucos dias,
-          o que eu sinto é leve, é verdadeiro, é raro.
-
-          Eu amo a nossa conexão.
-          A forma como a conversa flui.
-          Como eu rio com você
-          inclusive agora há pouco, no WhatsApp,
-          quando eu disse que você me deixa 'nervoso'
-          quando manda em mim…
-          (e você sabe exatamente o porquê).
-
-          Obrigado por tanto carinho.
-          Por tanta troca.
-          Por me fazer sentir querido.
-         
-          Eu desejo, de verdade,
-          partilhar minha vida com você.🤍
+          <span class="date">25 de fevereiro de 2026</span>
+          Hoje eu começo a construir esse site. E, de alguma forma, também começo a construir um pedaço do nosso futuro nele.<br><br>
+          Estou montando tudo em silêncio, imaginando o seu sorriso quando perceber cada detalhe.<br><br>
+          Garoto, eu quero muito que você sinta todo o amor que estou colocando aqui. O que eu sinto é leve, é verdadeiro, é raro.<br><br>
+          Desejo, de verdade, partilhar minha vida com você. 🤍
         </div>
       </div>
 
     </div>
 
-    <div class="suspense-container" id="suspense">
-     
+    <div class="suspense-container">
       <button class="btn-suspense" onclick="revelarFinal()">Tem mais uma coisa...</button>
-
     </div>
-
   </div>
 
   <div id="finalScreen">
@@ -479,111 +342,87 @@
   <div id="particle-container"></div>
 
   <script>
+    function createParticle() {
+      const container = document.getElementById('particle-container');
+      const particle = document.createElement('div');
+      particle.classList.add('particle');
+      
+      const size = Math.random() * 4 + 2;
+      const destinationX = (Math.random() - 0.5) * 300;
+      
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      particle.style.left = `${Math.random() * 100}vw`;
+      particle.style.bottom = `-10px`;
+      
+      const duration = Math.random() * 5 + 5;
+      particle.style.animationDuration = `${duration}s`;
+      particle.style.boxShadow = `0 0 ${size*2}px #fff`;
+
+      container.appendChild(particle);
+      setTimeout(() => particle.remove(), duration * 1000);
+    }
+
+    // Inicia poucos vagalumes logo no começo
+    const fireflies = setInterval(createParticle, 600);
+
     function iniciarSurpresa() {
-      var audio = document.getElementById('bgMusic');
-      var playPromise = audio.play();
+      const audio = document.getElementById('bgMusic');
+      audio.play().catch(() => console.log("Áudio bloqueado pelo navegador"));
 
-      if (playPromise !== undefined) {
-        playPromise.catch(function(error) {
-          console.log("Aguardando interação...");
-        });
-      }
+      const start = document.getElementById('startScreen');
+      const intro = document.getElementById('introScreen');
+      const main = document.getElementById('mainContent');
 
-      const startScreen = document.getElementById('startScreen');
-      const introScreen = document.getElementById('introScreen');
-      const mainContent = document.getElementById('mainContent');
-
-      startScreen.style.opacity = '0';
-
+      start.style.opacity = '0';
+      
       setTimeout(() => {
-        startScreen.style.display = 'none';
-        introScreen.style.display = 'flex';
-
+        start.style.display = 'none';
+        intro.style.display = 'flex';
         setTimeout(() => {
-          introScreen.style.opacity = '1';
-
+          intro.style.opacity = '1';
           setTimeout(() => {
-            introScreen.style.opacity = '0';
-
+            intro.style.opacity = '0';
             setTimeout(() => {
-              introScreen.style.display = 'none';
-              mainContent.style.display = 'block';
-
+              intro.style.display = 'none';
+              main.style.display = 'block';
               setTimeout(() => {
-                mainContent.style.opacity = '1';
+                main.style.opacity = '1';
                 iniciarObservador();
               }, 50);
-            }, 2000);
-
-          }, 4000);
-
+            }, 1500);
+          }, 3500);
         }, 50);
-      }, 1500);
+      }, 1200);
     }
 
     function iniciarObservador() {
-      const elements = document.querySelectorAll('.event, .suspense-container');
       const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
+          if (entry.isIntersecting) entry.target.classList.add('visible');
         });
-      }, { threshold: 0.15 });
-      elements.forEach(el => observer.observe(el));
+      }, { threshold: 0.2 });
+
+      document.querySelectorAll('.event').forEach(el => observer.observe(el));
     }
 
     function revelarFinal() {
-      const mainContent = document.getElementById('mainContent');
-      const finalScreen = document.getElementById('finalScreen');
-      const container = document.getElementById('particle-container');
-
-      // Apaga a linha do tempo (fade out)
-      mainContent.style.opacity = '0';
+      const main = document.getElementById('mainContent');
+      const final = document.getElementById('finalScreen');
+      
+      main.style.opacity = '0';
+      // Aumenta a intensidade dos vagalumes no final
+      clearInterval(fireflies);
+      setInterval(createParticle, 150);
 
       setTimeout(() => {
-        mainContent.style.display = 'none';
-
-        // Prepara a Tela Final
-        finalScreen.style.display = 'flex';
-
-        // Inicia os vagalumes mágicos para a declaração final
-        container.style.display = 'block';
-        for (let i = 0; i < 40; i++) {
-            createParticle(container);
-        }
-        setInterval(() => {
-            createParticle(container);
-        }, 300);
-
-        // Faz a declaração de amor surgir suavemente
+        main.style.display = 'none';
+        final.style.display = 'flex';
         setTimeout(() => {
-          finalScreen.style.opacity = '1';
+          final.style.opacity = '1';
         }, 50);
-
-      }, 1500); // Espera o fade out do mainContent terminar
-    }
-
-    function createParticle(container) {
-        const particle = document.createElement('div');
-        particle.classList.add('particle');
-
-        const size = Math.random() * 5 + 3;
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        particle.style.left = `${Math.random() * 100}vw`;
-
-        const duration = Math.random() * 6 + 6;
-        particle.style.animationDuration = `${duration}s`;
-        particle.style.animationDelay = `${Math.random() * 2}s`;
-
-        container.appendChild(particle);
-
-        setTimeout(() => {
-            particle.remove();
-        }, duration * 1000);
+      }, 2000);
     }
   </script>
-
 </body>
 </html>
