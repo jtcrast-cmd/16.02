@@ -10,7 +10,6 @@
       --spotify-green: #1DB954;
       --spotify-black: #121212;
       --spotify-light-black: #282828;
-      --glass: rgba(255, 255, 255, 0.05);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -22,24 +21,24 @@
       overflow-x: hidden;
     }
 
-    /* --- BACKGROUND ANIMADO --- */
+    /* BACKGROUND QUE MUDA DE COR */
     .bg-gradient {
       position: fixed;
       top: 0;
       width: 100%;
       height: 100vh;
-      background: linear-gradient(180deg, #2c3e50 0%, #121212 100%);
+      background: linear-gradient(180deg, #454545 0%, #121212 100%);
       z-index: -1;
-      transition: background 1.5s ease;
+      transition: background 1.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* --- PLAYER BAR (MENU INFERIOR) --- */
+    /* BARRA DO PLAYER (FIXA NO RODAPÉ) */
     .player-bar {
       position: fixed;
       bottom: 0;
       width: 100%;
       background: #000;
-      padding: 15px 25px;
+      padding: 12px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -47,76 +46,90 @@
       border-top: 1px solid #282828;
     }
 
-    .track-info { display: flex; align-items: center; gap: 15px; width: 30%; }
-    .track-art { width: 50px; height: 50px; background: var(--spotify-light-black); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
-    .track-text h4 { font-size: 14px; margin-bottom: 4px; }
-    .track-text p { font-size: 11px; color: #b3b3b3; }
+    .track-info { display: flex; align-items: center; gap: 12px; width: 35%; }
+    .track-art { width: 45px; height: 45px; background-color: var(--spotify-light-black); border-radius: 4px; background-size: cover; background-position: center; transition: 0.5s; }
+    .track-text h4 { font-size: 13px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .track-text p { font-size: 10px; color: #b3b3b3; }
 
-    .player-controls { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .player-controls { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
     .play-btn { background: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-    .play-btn:hover { transform: scale(1.1); }
+    .play-btn:hover { transform: scale(1.05); }
     
-    .progress-container { width: 100%; max-width: 400px; height: 4px; background: #4f4f4f; border-radius: 2px; position: relative; }
-    #progressBar { height: 100%; background: white; width: 0%; border-radius: 2px; transition: width 0.1s; }
+    .progress-container { width: 100%; max-width: 350px; height: 4px; background: #4f4f4f; border-radius: 2px; }
+    #progressBar { height: 100%; background: var(--spotify-green); width: 0%; border-radius: 2px; }
 
-    /* --- TELAS DE TRANSIÇÃO --- */
+    /* TELAS DE TRANSIÇÃO */
     #startScreen {
       position: fixed; inset: 0; background: black; z-index: 2000;
       display: flex; flex-direction: column; justify-content: center; align-items: center;
-      transition: 1s ease;
+      transition: 1.2s cubic-bezier(0.7, 0, 0.3, 1);
     }
 
     .typing-text {
       font-family: 'Playfair Display', serif;
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       border-right: 2px solid var(--spotify-green);
       white-space: nowrap;
       overflow: hidden;
       width: 0;
       margin-bottom: 30px;
+      animation: typing 3s steps(30) forwards;
     }
 
-    /* --- CONTEÚDO --- */
+    @keyframes typing { from { width: 0 } to { width: 280px } }
+
     #mainContent {
       display: none;
-      padding: 60px 20px 120px;
-      max-width: 600px;
+      padding: 30px 20px 150px;
+      max-width: 650px;
       margin: 0 auto;
+      opacity: 0;
+      transition: 1.5s;
     }
 
     .playlist-header { margin-bottom: 40px; display: flex; gap: 20px; align-items: flex-end; }
-    .playlist-cover { width: 180px; height: 180px; background: linear-gradient(45deg, #1DB954, #191414); box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; font-size: 60px; }
-
-    .event-card {
-      margin-bottom: 40px;
-      padding: 20px;
-      border-radius: 8px;
-      background: rgba(255,255,255,0.02);
-      transition: 0.3s;
-      cursor: pointer;
-      border: 1px solid transparent;
+    .playlist-cover { 
+        width: 170px; height: 170px; 
+        background-image: url('foto2.jpeg'); 
+        background-size: cover; 
+        background-position: center; 
+        box-shadow: 0 15px 40px rgba(0,0,0,0.6); 
     }
 
-    .event-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.1); }
-    .event-card.active { border-left: 4px solid var(--spotify-green); background: rgba(255,255,255,0.05); }
+    /* CARDS DA HISTÓRIA */
+    .event-card {
+      margin-bottom: 15px;
+      padding: 16px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.02);
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      border: 1px solid transparent;
+      transition: 0.4s;
+    }
 
-    .event-card h3 { font-size: 18px; margin-bottom: 10px; color: var(--spotify-green); }
-    .event-card p { font-size: 14px; color: #b3b3b3; line-height: 1.6; }
+    .event-card.active { 
+        background: rgba(255,255,255,0.1); 
+        border-color: rgba(255,255,255,0.1);
+    }
 
-    /* --- FINAL --- */
+    .card-art { width: 65px; height: 65px; background-size: cover; background-position: center; border-radius: 4px; flex-shrink: 0; }
+    .card-text h3 { font-size: 15px; margin-bottom: 4px; color: var(--spotify-green); }
+    .card-text p { font-size: 13px; color: #d3d3d3; line-height: 1.5; }
+
+    /* TELA FINAL */
     #finalScreen {
       position: fixed; inset: 0; background: #000; z-index: 3000;
       display: none; flex-direction: column; justify-content: center; align-items: center;
-      text-align: center; opacity: 0; transition: 2s;
+      text-align: center; opacity: 0; transition: 2s; padding: 30px;
     }
-
-    @keyframes blink { 50% { border-color: transparent; } }
-    .animate-typing { animation: typing 3.5s steps(40) forwards, blink .75s step-end infinite; }
-    @keyframes typing { from { width: 0 } to { width: 100% } }
 
     @media (max-width: 600px) {
       .track-info { display: none; }
-      .playlist-cover { width: 120px; height: 120px; font-size: 40px; }
+      .playlist-cover { width: 140px; height: 140px; }
+      .playlist-header h1 { font-size: 26px; }
+      @keyframes typing { from { width: 0 } to { width: 240px } }
     }
   </style>
 </head>
@@ -127,7 +140,7 @@
 
   <div class="player-bar" id="playerBar" style="display: none;">
     <div class="track-info">
-      <div class="track-art" id="currentArt">🤍</div>
+      <div class="track-art" id="currentArt" style="background-image: url('foto2.jpeg');"></div>
       <div class="track-text">
         <h4 id="currentTitle">Nossa Mix</h4>
         <p>Lucas & Você</p>
@@ -135,84 +148,95 @@
     </div>
     <div class="player-controls">
       <button class="play-btn" onclick="toggleMusic()" id="masterPlay">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="black"><path d="M8 5v14l11-7z"/></svg>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="black"><path d="M8 5v14l11-7z"/></svg>
       </button>
       <div class="progress-container">
         <div id="progressBar"></div>
       </div>
     </div>
-    <div style="width: 30%; text-align: right; font-size: 12px; color: #b3b3b3;">
-      <span id="currentTime">0:00</span> / 2026
+    <div style="width: 30%; text-align: right; font-size: 11px; color: #b3b3b3; letter-spacing: 1px;">
+       2026
     </div>
   </div>
 
   <div id="startScreen">
-    <div class="typing-text" id="typewriter">Para o garoto que mudou meu ritmo...</div>
-    <button class="play-btn" style="width: 60px; height: 60px;" onclick="iniciar()">
+    <div class="typing-text">O nosso ritmo é diferente...</div>
+    <button class="play-btn" style="width: 65px; height: 65px;" onclick="iniciar()">
       <svg viewBox="0 0 24 24" width="30" height="30" fill="black"><path d="M8 5v14l11-7z"/></svg>
     </button>
+    <p style="margin-top: 20px; font-size: 10px; color: #555; letter-spacing: 2px;">PRESS PLAY</p>
   </div>
 
   <div id="mainContent">
     <div class="playlist-header">
-      <div class="playlist-cover">🎧</div>
+      <div class="playlist-cover"></div>
       <div>
-        <p style="font-size: 12px; font-weight: bold; text-transform: uppercase;">Playlist</p>
-        <h1 style="font-size: 48px; font-family: 'Montserrat', sans-serif;">Nossa História</h1>
-        <p style="color: #b3b3b3; margin-top: 10px;">Criada por Amor • 4 momentos • 2026</p>
+        <p style="font-size: 10px; font-weight: bold; color: #b3b3b3; letter-spacing: 1px;">PLAYLIST</p>
+        <h1 style="font-size: 32px; margin: 5px 0;">Nossa História</h1>
+        <p style="color: #b3b3b3; font-size: 12px;">Para: <b>Lucas</b> • 4 capítulos</p>
       </div>
     </div>
 
-    <div class="event-card" data-title="Onde Tudo Começou" data-art="✨" data-bg="#1e3a8a">
-      <h3>01. Onde Tudo Começou</h3>
-      <p>16 de Fevereiro. Eu duvidei se poderia amar de forma pura, mas você me fez enxergar que o amor vai além do medo. Você é a pessoa por quem eu orei.</p>
+    <div class="event-card" data-title="Onde Tudo Começou" data-img="foto3.jpeg" data-color="#1e3a8a">
+      <div class="card-art" style="background-image: url('foto3.jpeg');"></div>
+      <div class="card-text">
+        <h3>01. Onde Tudo Começou</h3>
+        <p>Eu duvidei se poderia amar de forma pura, mas você me fez enxergar que o amor vai além do medo. Você é quem eu orei para encontrar.</p>
+      </div>
     </div>
 
-    <div class="event-card" data-title="Primeiro Toque" data-art="🔥" data-bg="#581c87">
-      <h3>02. Nosso Primeiro Toque</h3>
-      <p>17 de Fevereiro. Senti minha alma aflorar. O corpo fala o idioma que a alma entende. O que nasce entre nós não cabe na pressa do mundo.</p>
+    <div class="event-card" data-title="Primeiro Toque" data-img="foto2.jpeg" data-color="#581c87">
+      <div class="card-art" style="background-image: url('foto2.jpeg');"></div>
+      <div class="card-text">
+        <h3>02. Nosso Primeiro Toque</h3>
+        <p>Senti minha alma aflorar em silêncio. Entre toque e carinho, entendi que o corpo fala o idioma que a alma entende.</p>
+      </div>
     </div>
 
-    <div class="event-card" data-title="A Sorte que Tenho" data-art="🍀" data-bg="#064e3b">
-      <h3>03. A Sorte que Tenho</h3>
-      <p>21 de Fevereiro. Amo seu olhar, seu abraço. Respeito nosso ritmo, pois o que é verdadeiro não precisa correr. Como é bom ter você.</p>
+    <div class="event-card" data-title="A Sorte que Tenho" data-img="foto3.jpeg" data-color="#064e3b">
+      <div class="card-art" style="background-image: url('foto3.jpeg');"></div>
+      <div class="card-text">
+        <h3>03. A Sorte que Tenho</h3>
+        <p>Amo seu olhar e seu abraço. Respeito nosso ritmo, pois o que é verdadeiro não precisa de pressa. Como é bom ter você.</p>
+      </div>
     </div>
 
-    <div class="event-card" data-title="Nosso Futuro" data-art="🤍" data-bg="#78350f">
-      <h3>04. Romance Infinito</h3>
-      <p>25 de Fevereiro. Construindo este site e nosso futuro. O que sinto é leve, raro e verdadeiro. Desejo partilhar minha vida com você.</p>
+    <div class="event-card" data-title="Romance Infinito" data-img="foto2.jpeg" data-color="#78350f">
+      <div class="card-art" style="background-image: url('foto2.jpeg');"></div>
+      <div class="card-text">
+        <h3>04. Romance Infinito</h3>
+        <p>Construindo este site e nosso futuro. O que sinto é leve e raro. Desejo, de verdade, partilhar minha vida com você. 🤍</p>
+      </div>
     </div>
 
-    <button class="event-card" onclick="revelarFinal()" style="width: 100%; text-align: center; border: 1px dashed #555;">
-      <h3>[ Faixa Bônus ]</h3>
-      <p>Clique para revelar o último segredo...</p>
+    <button class="event-card" onclick="revelarFinal()" style="width: 100%; border: 1px dashed #444; background: transparent; justify-content: center; margin-top: 30px;">
+      <div class="card-text" style="text-align: center;">
+        <h3 style="color: white;">[ Faixa Bônus ]</h3>
+        <p>Toque aqui para o final</p>
+      </div>
     </button>
   </div>
 
   <div id="finalScreen">
-    <h1 style="font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 20px;">Presente da Vida</h1>
-    <p style="color: #b3b3b3; max-width: 400px;">Obrigado por ser o maior presente que Deus e a vida me deram.</p>
-    <button class="play-btn" style="margin-top: 40px; width: auto; padding: 0 30px; border-radius: 20px; font-weight: bold;" onclick="location.reload()">Ouvir de novo</button>
+    <div class="playlist-cover" style="width: 180px; height: 180px; margin-bottom: 30px; border-radius: 4px;"></div>
+    <h2 style="font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 15px;">Tu és o meu maior presente.</h2>
+    <p style="color: #b3b3b3; line-height: 1.6; max-width: 300px;">Obrigado por seres esse presente de Deus na minha vida. Amo-te.</p>
+    <button class="play-btn" style="margin-top: 40px; width: auto; padding: 0 25px; border-radius: 20px; font-weight: bold; font-size: 12px;" onclick="location.reload()">REPETIR MIX</button>
   </div>
 
   <script>
-    // Efeito de Digitação Inicial
-    window.onload = () => {
-      const text = document.getElementById('typewriter');
-      text.classList.add('animate-typing');
-    };
-
     function iniciar() {
       const audio = document.getElementById('bgMusic');
-      audio.play();
-
-      document.getElementById('startScreen').style.transform = 'translateY(-100%)';
-      document.getElementById('playerBar').style.display = 'flex';
+      audio.play().catch(() => {});
       
+      document.getElementById('startScreen').style.opacity = '0';
       setTimeout(() => {
-        document.getElementById('mainContent').style.display = 'block';
-        setTimeout(() => { document.getElementById('mainContent').style.opacity = '1'; }, 50);
-      }, 800);
+        document.getElementById('startScreen').style.display = 'none';
+        document.getElementById('playerBar').style.display = 'flex';
+        const main = document.getElementById('mainContent');
+        main.style.display = 'block';
+        setTimeout(() => { main.style.opacity = '1'; }, 50);
+      }, 1200);
     }
 
     function toggleMusic() {
@@ -220,29 +244,27 @@
       const btn = document.getElementById('masterPlay');
       if (audio.paused) {
         audio.play();
-        btn.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="black"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+        btn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="black"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
       } else {
         audio.pause();
-        btn.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="black"><path d="M8 5v14l11-7z"/></svg>';
+        btn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="black"><path d="M8 5v14l11-7z"/></svg>';
       }
     }
 
-    // Lógica de Scroll e Interatividade das Faixas
     window.addEventListener('scroll', () => {
       const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       const scrolled = (winScroll / height) * 100;
       document.getElementById("progressBar").style.width = scrolled + "%";
       
-      const cards = document.querySelectorAll('.event-card');
+      const cards = document.querySelectorAll('.event-card[data-title]');
       cards.forEach(card => {
         const rect = card.getBoundingClientRect();
         if(rect.top < window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.5) {
           card.classList.add('active');
-          // Atualiza o Player
           document.getElementById('currentTitle').innerText = card.dataset.title;
-          document.getElementById('currentArt').innerText = card.dataset.art;
-          document.getElementById('bg').style.background = `linear-gradient(180deg, ${card.dataset.bg} 0%, #121212 100%)`;
+          document.getElementById('currentArt').style.backgroundImage = `url('${card.dataset.img}')`;
+          document.getElementById('bg').style.background = `linear-gradient(180deg, ${card.dataset.color} 0%, #121212 100%)`;
         } else {
           card.classList.remove('active');
         }
@@ -254,13 +276,6 @@
       final.style.display = 'flex';
       setTimeout(() => { final.style.opacity = '1'; }, 100);
     }
-
-    // Contador de tempo falso para o estilo
-    setInterval(() => {
-      const timeSpan = document.getElementById('currentTime');
-      let now = new Date();
-      timeSpan.innerText = `${now.getMinutes()}:${now.getSeconds().toString().padStart(2, '0')}`;
-    }, 1000);
   </script>
 </body>
 </html>
