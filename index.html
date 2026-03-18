@@ -3,426 +3,264 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nossa História</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-
+  <title>Spotify | Nossa Mix</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
   <style>
     :root {
-      --accent-color: #ffffff;
-      --bg-dark: #080808;
-      --glass-bg: rgba(255, 255, 255, 0.04);
-      --glass-border: rgba(255, 255, 255, 0.1);
+      --spotify-green: #1DB954;
+      --spotify-black: #121212;
+      --spotify-light-black: #282828;
+      --glass: rgba(255, 255, 255, 0.05);
     }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg-dark);
-      color: #e0e0e0;
-      scroll-behavior: smooth;
+      background-color: var(--spotify-black);
+      color: white;
+      font-family: 'Montserrat', sans-serif;
       overflow-x: hidden;
-      min-height: 100vh;
     }
 
-    /* Fundo sutil com gradiente */
-    body::after {
-      content: "";
+    /* --- BACKGROUND ANIMADO --- */
+    .bg-gradient {
       position: fixed;
-      inset: 0;
-      background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
-      z-index: -3;
+      top: 0;
+      width: 100%;
+      height: 100vh;
+      background: linear-gradient(180deg, #2c3e50 0%, #121212 100%);
+      z-index: -1;
+      transition: background 1.5s ease;
     }
 
-    /* --- TELA DE ABERTURA --- */
-    #startScreen {
+    /* --- PLAYER BAR (MENU INFERIOR) --- */
+    .player-bar {
       position: fixed;
-      inset: 0;
-      background-color: var(--bg-dark);
+      bottom: 0;
+      width: 100%;
+      background: #000;
+      padding: 15px 25px;
       display: flex;
-      flex-direction: column;
-      justify-content: center;
       align-items: center;
-      z-index: 10000;
-      transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-      text-align: center;
-      padding: 30px;
+      justify-content: space-between;
+      z-index: 1000;
+      border-top: 1px solid #282828;
     }
 
-    #startScreen h2 {
+    .track-info { display: flex; align-items: center; gap: 15px; width: 30%; }
+    .track-art { width: 50px; height: 50px; background: var(--spotify-light-black); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+    .track-text h4 { font-size: 14px; margin-bottom: 4px; }
+    .track-text p { font-size: 11px; color: #b3b3b3; }
+
+    .player-controls { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .play-btn { background: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+    .play-btn:hover { transform: scale(1.1); }
+    
+    .progress-container { width: 100%; max-width: 400px; height: 4px; background: #4f4f4f; border-radius: 2px; position: relative; }
+    #progressBar { height: 100%; background: white; width: 0%; border-radius: 2px; transition: width 0.1s; }
+
+    /* --- TELAS DE TRANSIÇÃO --- */
+    #startScreen {
+      position: fixed; inset: 0; background: black; z-index: 2000;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      transition: 1s ease;
+    }
+
+    .typing-text {
       font-family: 'Playfair Display', serif;
-      font-weight: 400;
-      font-size: 2rem;
-      margin-bottom: 10px;
-      letter-spacing: 1px;
-    }
-
-    .mensagem-engracada {
-      color: #888;
-      font-size: 0.85rem;
-      font-style: italic;
+      font-size: 1.5rem;
+      border-right: 2px solid var(--spotify-green);
+      white-space: nowrap;
+      overflow: hidden;
+      width: 0;
       margin-bottom: 30px;
-      max-width: 300px;
     }
 
-    .btn-abrir {
-      padding: 15px 50px;
-      border: 1px solid var(--glass-border);
-      border-radius: 40px;
-      background: var(--glass-bg);
-      backdrop-filter: blur(10px);
-      color: #fff;
-      font-family: 'Playfair Display', serif;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: all 0.4s ease;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    }
-
-    .btn-abrir:hover {
-      background: #fff;
-      color: #000;
-      transform: scale(1.05);
-    }
-
-    /* --- INTRO SCREEN --- */
-    #introScreen {
-      position: fixed;
-      inset: 0;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 9000;
-      opacity: 0;
-      transition: opacity 2s ease;
-      padding: 40px;
-      text-align: center;
-    }
-
-    #introScreen h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.2rem;
-      font-weight: 300;
-      line-height: 1.4;
-      max-width: 800px;
-    }
-
-    /* --- CONTEÚDO PRINCIPAL --- */
+    /* --- CONTEÚDO --- */
     #mainContent {
       display: none;
-      opacity: 0;
-      transition: opacity 2s ease;
-      padding: 80px 20px;
-    }
-
-    .timeline {
-      position: relative;
-      max-width: 700px;
-      margin: auto;
-    }
-
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 10px;
-      top: 0;
-      bottom: 0;
-      width: 1px;
-      background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.3) 10%, rgba(255,255,255,0.3) 90%, transparent);
-    }
-
-    .event {
-      position: relative;
-      margin-bottom: 80px;
-      padding-left: 45px;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: all 1s ease;
-    }
-
-    .event.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .event::before {
-      content: '';
-      position: absolute;
-      left: 6px;
-      top: 8px;
-      width: 9px;
-      height: 9px;
-      background: #fff;
-      border-radius: 50%;
-      box-shadow: 0 0 15px #fff;
-      z-index: 2;
-    }
-
-    .card {
-      background: rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--glass-border);
-      padding: 35px;
-      border-radius: 20px;
-      line-height: 1.8;
-      font-size: 1.05rem;
-      color: #ccc;
-      transition: transform 0.4s ease, border 0.4s ease;
-    }
-
-    .card:hover {
-      border-color: rgba(255,255,255,0.3);
-      transform: translateX(5px);
-    }
-
-    .date {
-      display: block;
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      color: #fff;
-      margin-bottom: 20px;
-      font-size: 0.9rem;
-      letter-spacing: 1px;
-      opacity: 0.7;
-    }
-
-    /* --- BOTÃO FINAL --- */
-    .suspense-container {
-      text-align: center;
-      padding: 60px 0 120px;
-    }
-
-    .btn-suspense {
-      background: none;
-      border: 1px dashed rgba(255,255,255,0.3);
-      color: #fff;
-      padding: 15px 30px;
-      border-radius: 10px;
-      font-family: 'Playfair Display', serif;
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: all 0.5s;
-    }
-
-    .btn-suspense:hover {
-      background: rgba(255,255,255,0.05);
-      border-color: #fff;
-      letter-spacing: 2px;
-    }
-
-    /* --- TELA FINAL --- */
-    #finalScreen {
-      position: fixed;
-      inset: 0;
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 10000;
-      opacity: 0;
-      transition: opacity 2.5s ease;
-      background: var(--bg-dark);
-      text-align: center;
-      padding: 40px;
-    }
-
-    .very-final-text {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem;
-      line-height: 1.6;
+      padding: 60px 20px 120px;
       max-width: 600px;
-      color: #fff;
-      text-shadow: 0 0 20px rgba(255,255,255,0.4);
+      margin: 0 auto;
     }
 
-    /* VAGALUMES */
-    #particle-container {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 999;
+    .playlist-header { margin-bottom: 40px; display: flex; gap: 20px; align-items: flex-end; }
+    .playlist-cover { width: 180px; height: 180px; background: linear-gradient(45deg, #1DB954, #191414); box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; font-size: 60px; }
+
+    .event-card {
+      margin-bottom: 40px;
+      padding: 20px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.02);
+      transition: 0.3s;
+      cursor: pointer;
+      border: 1px solid transparent;
     }
 
-    .particle {
-      position: absolute;
-      background: #fff;
-      border-radius: 50%;
-      filter: blur(1px);
-      opacity: 0;
-      animation: floatUp ease-in-out infinite;
+    .event-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.1); }
+    .event-card.active { border-left: 4px solid var(--spotify-green); background: rgba(255,255,255,0.05); }
+
+    .event-card h3 { font-size: 18px; margin-bottom: 10px; color: var(--spotify-green); }
+    .event-card p { font-size: 14px; color: #b3b3b3; line-height: 1.6; }
+
+    /* --- FINAL --- */
+    #finalScreen {
+      position: fixed; inset: 0; background: #000; z-index: 3000;
+      display: none; flex-direction: column; justify-content: center; align-items: center;
+      text-align: center; opacity: 0; transition: 2s;
     }
 
-    @keyframes floatUp {
-      0% { transform: translateY(0) scale(0); opacity: 0; }
-      20% { opacity: 0.6; }
-      80% { opacity: 0.6; }
-      100% { transform: translateY(-100vh) scale(1); opacity: 0; }
-    }
+    @keyframes blink { 50% { border-color: transparent; } }
+    .animate-typing { animation: typing 3.5s steps(40) forwards, blink .75s step-end infinite; }
+    @keyframes typing { from { width: 0 } to { width: 100% } }
 
     @media (max-width: 600px) {
-      .card { padding: 25px; font-size: 0.95rem; }
-      #introScreen h1, .very-final-text { font-size: 1.5rem; }
+      .track-info { display: none; }
+      .playlist-cover { width: 120px; height: 120px; font-size: 40px; }
     }
   </style>
 </head>
-
 <body>
 
-  <audio id="bgMusic" loop>
-    <source src="liniker.mp3" type="audio/mpeg">
-  </audio>
+  <div class="bg-gradient" id="bg"></div>
+  <audio id="bgMusic" src="liniker.mp3" loop></audio>
 
-  <div id="startScreen">
-    <h2>Para o Lucas.</h2>
-    <div class="mensagem-engracada">
-      (Eu não sabia nada de código, mas por você eu aprendo qualquer língua. ❤️)
+  <div class="player-bar" id="playerBar" style="display: none;">
+    <div class="track-info">
+      <div class="track-art" id="currentArt">🤍</div>
+      <div class="track-text">
+        <h4 id="currentTitle">Nossa Mix</h4>
+        <p>Lucas & Você</p>
+      </div>
     </div>
-    <button class="btn-abrir" onclick="iniciarSurpresa()">Entrar no nosso mundo</button>
+    <div class="player-controls">
+      <button class="play-btn" onclick="toggleMusic()" id="masterPlay">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="black"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <div class="progress-container">
+        <div id="progressBar"></div>
+      </div>
+    </div>
+    <div style="width: 30%; text-align: right; font-size: 12px; color: #b3b3b3;">
+      <span id="currentTime">0:00</span> / 2026
+    </div>
   </div>
 
-  <div id="introScreen">
-    <h1>"Algumas coisas foram escritas antes de serem ditas."</h1>
+  <div id="startScreen">
+    <div class="typing-text" id="typewriter">Para o garoto que mudou meu ritmo...</div>
+    <button class="play-btn" style="width: 60px; height: 60px;" onclick="iniciar()">
+      <svg viewBox="0 0 24 24" width="30" height="30" fill="black"><path d="M8 5v14l11-7z"/></svg>
+    </button>
   </div>
 
   <div id="mainContent">
-    <div class="timeline">
-
-      <div class="event">
-        <div class="card">
-          <span class="date">16 de fevereiro de 2026</span>
-          Lucas,<br><br>
-          Por muito tempo eu duvidei se poderia amar e ser amado de uma forma pura. Com respeito, cuidado e uma troca de afeto intensa e verdadeira.<br><br>
-          Você sabe que eu sou chorão… então estou chorando enquanto escrevo isso. Eu criei medo do amor, porque amar é ser vulnerável. É entregar o coração sem garantias.<br><br>
-          Mas você me fez enxergar que o amor vai além do medo, é sobre confiança.
-        </div>
+    <div class="playlist-header">
+      <div class="playlist-cover">🎧</div>
+      <div>
+        <p style="font-size: 12px; font-weight: bold; text-transform: uppercase;">Playlist</p>
+        <h1 style="font-size: 48px; font-family: 'Montserrat', sans-serif;">Nossa História</h1>
+        <p style="color: #b3b3b3; margin-top: 10px;">Criada por Amor • 4 momentos • 2026</p>
       </div>
-
-      <div class="event">
-        <div class="card">
-          <span class="date">17 de fevereiro de 2026</span>
-          Hoje eu senti minha alma aflorar, como se algo adormecido despertasse em silêncio.<br><br>
-          Entre toque, desejo e carinho, eu entendi que o corpo pode falar o idioma que a alma entende.<br><br>
-          Quando parecia fim, era começo. Porque o que nasce quando dois corações se encontram sem defesa não cabe na pressa do mundo.
-        </div>
-      </div>
-
-      <div class="event">
-        <div class="card">
-          <span class="date">21 de fevereiro de 2026</span>
-          Eu amo quando você me olha. Amo quando me abraça. Amo quando suas atitudes dizem: “Eu quero você por perto.”<br><br>
-          Eu respeito seu ritmo. Respeito o que estamos construindo. Porque o que é verdadeiro não precisa correr.<br><br>
-          Mas por dentro, eu só penso: Como é bom ter você comigo.
-        </div>
-      </div>
-
-      <div class="event">
-        <div class="card">
-          <span class="date">25 de fevereiro de 2026</span>
-          Hoje eu começo a construir esse site. E, de alguma forma, também começo a construir um pedaço do nosso futuro nele.<br><br>
-          Estou montando tudo em silêncio, imaginando o seu sorriso quando perceber cada detalhe.<br><br>
-          Garoto, eu quero muito que você sinta todo o amor que estou colocando aqui. O que eu sinto é leve, é verdadeiro, é raro.<br><br>
-          Desejo, de verdade, partilhar minha vida com você. 🤍
-        </div>
-      </div>
-
     </div>
 
-    <div class="suspense-container">
-      <button class="btn-suspense" onclick="revelarFinal()">Tem mais uma coisa...</button>
+    <div class="event-card" data-title="Onde Tudo Começou" data-art="✨" data-bg="#1e3a8a">
+      <h3>01. Onde Tudo Começou</h3>
+      <p>16 de Fevereiro. Eu duvidei se poderia amar de forma pura, mas você me fez enxergar que o amor vai além do medo. Você é a pessoa por quem eu orei.</p>
     </div>
+
+    <div class="event-card" data-title="Primeiro Toque" data-art="🔥" data-bg="#581c87">
+      <h3>02. Nosso Primeiro Toque</h3>
+      <p>17 de Fevereiro. Senti minha alma aflorar. O corpo fala o idioma que a alma entende. O que nasce entre nós não cabe na pressa do mundo.</p>
+    </div>
+
+    <div class="event-card" data-title="A Sorte que Tenho" data-art="🍀" data-bg="#064e3b">
+      <h3>03. A Sorte que Tenho</h3>
+      <p>21 de Fevereiro. Amo seu olhar, seu abraço. Respeito nosso ritmo, pois o que é verdadeiro não precisa correr. Como é bom ter você.</p>
+    </div>
+
+    <div class="event-card" data-title="Nosso Futuro" data-art="🤍" data-bg="#78350f">
+      <h3>04. Romance Infinito</h3>
+      <p>25 de Fevereiro. Construindo este site e nosso futuro. O que sinto é leve, raro e verdadeiro. Desejo partilhar minha vida com você.</p>
+    </div>
+
+    <button class="event-card" onclick="revelarFinal()" style="width: 100%; text-align: center; border: 1px dashed #555;">
+      <h3>[ Faixa Bônus ]</h3>
+      <p>Clique para revelar o último segredo...</p>
+    </button>
   </div>
 
   <div id="finalScreen">
-    <div class="very-final-text">
-      Obrigado por ser um presente na minha vida.<br><br>
-      Você é o maior presente que Deus e a vida me deram.
-    </div>
+    <h1 style="font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 20px;">Presente da Vida</h1>
+    <p style="color: #b3b3b3; max-width: 400px;">Obrigado por ser o maior presente que Deus e a vida me deram.</p>
+    <button class="play-btn" style="margin-top: 40px; width: auto; padding: 0 30px; border-radius: 20px; font-weight: bold;" onclick="location.reload()">Ouvir de novo</button>
   </div>
 
-  <div id="particle-container"></div>
-
   <script>
-    function createParticle() {
-      const container = document.getElementById('particle-container');
-      const particle = document.createElement('div');
-      particle.classList.add('particle');
-      
-      const size = Math.random() * 4 + 2;
-      const destinationX = (Math.random() - 0.5) * 300;
-      
-      particle.style.width = `${size}px`;
-      particle.style.height = `${size}px`;
-      particle.style.left = `${Math.random() * 100}vw`;
-      particle.style.bottom = `-10px`;
-      
-      const duration = Math.random() * 5 + 5;
-      particle.style.animationDuration = `${duration}s`;
-      particle.style.boxShadow = `0 0 ${size*2}px #fff`;
+    // Efeito de Digitação Inicial
+    window.onload = () => {
+      const text = document.getElementById('typewriter');
+      text.classList.add('animate-typing');
+    };
 
-      container.appendChild(particle);
-      setTimeout(() => particle.remove(), duration * 1000);
-    }
-
-    // Inicia poucos vagalumes logo no começo
-    const fireflies = setInterval(createParticle, 600);
-
-    function iniciarSurpresa() {
+    function iniciar() {
       const audio = document.getElementById('bgMusic');
-      audio.play().catch(() => console.log("Áudio bloqueado pelo navegador"));
+      audio.play();
 
-      const start = document.getElementById('startScreen');
-      const intro = document.getElementById('introScreen');
-      const main = document.getElementById('mainContent');
-
-      start.style.opacity = '0';
+      document.getElementById('startScreen').style.transform = 'translateY(-100%)';
+      document.getElementById('playerBar').style.display = 'flex';
       
       setTimeout(() => {
-        start.style.display = 'none';
-        intro.style.display = 'flex';
-        setTimeout(() => {
-          intro.style.opacity = '1';
-          setTimeout(() => {
-            intro.style.opacity = '0';
-            setTimeout(() => {
-              intro.style.display = 'none';
-              main.style.display = 'block';
-              setTimeout(() => {
-                main.style.opacity = '1';
-                iniciarObservador();
-              }, 50);
-            }, 1500);
-          }, 3500);
-        }, 50);
-      }, 1200);
+        document.getElementById('mainContent').style.display = 'block';
+        setTimeout(() => { document.getElementById('mainContent').style.opacity = '1'; }, 50);
+      }, 800);
     }
 
-    function iniciarObservador() {
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) entry.target.classList.add('visible');
-        });
-      }, { threshold: 0.2 });
-
-      document.querySelectorAll('.event').forEach(el => observer.observe(el));
+    function toggleMusic() {
+      const audio = document.getElementById('bgMusic');
+      const btn = document.getElementById('masterPlay');
+      if (audio.paused) {
+        audio.play();
+        btn.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="black"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+      } else {
+        audio.pause();
+        btn.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="black"><path d="M8 5v14l11-7z"/></svg>';
+      }
     }
+
+    // Lógica de Scroll e Interatividade das Faixas
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById("progressBar").style.width = scrolled + "%";
+      
+      const cards = document.querySelectorAll('.event-card');
+      cards.forEach(card => {
+        const rect = card.getBoundingClientRect();
+        if(rect.top < window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.5) {
+          card.classList.add('active');
+          // Atualiza o Player
+          document.getElementById('currentTitle').innerText = card.dataset.title;
+          document.getElementById('currentArt').innerText = card.dataset.art;
+          document.getElementById('bg').style.background = `linear-gradient(180deg, ${card.dataset.bg} 0%, #121212 100%)`;
+        } else {
+          card.classList.remove('active');
+        }
+      });
+    });
 
     function revelarFinal() {
-      const main = document.getElementById('mainContent');
       const final = document.getElementById('finalScreen');
-      
-      main.style.opacity = '0';
-      // Aumenta a intensidade dos vagalumes no final
-      clearInterval(fireflies);
-      setInterval(createParticle, 150);
-
-      setTimeout(() => {
-        main.style.display = 'none';
-        final.style.display = 'flex';
-        setTimeout(() => {
-          final.style.opacity = '1';
-        }, 50);
-      }, 2000);
+      final.style.display = 'flex';
+      setTimeout(() => { final.style.opacity = '1'; }, 100);
     }
+
+    // Contador de tempo falso para o estilo
+    setInterval(() => {
+      const timeSpan = document.getElementById('currentTime');
+      let now = new Date();
+      timeSpan.innerText = `${now.getMinutes()}:${now.getSeconds().toString().padStart(2, '0')}`;
+    }, 1000);
   </script>
 </body>
 </html>
